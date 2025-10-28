@@ -179,6 +179,9 @@ async def auto_rename_files(client, message):
     renaming_operations[file_id] = datetime.now()
 
     try:
+        # ✅ Initialize variables to prevent UnboundLocalError
+        download_path = metadata_path = thumb_path = None
+
         # Extract metadata from filename
         season, episode = extract_season_episode(file_name)
         quality = extract_quality(file_name)
@@ -268,6 +271,6 @@ async def auto_rename_files(client, message):
         logger.error(f"Processing error: {e}")
         await message.reply_text(f"Error: {str(e)}")
     finally:
-        # Clean up files
+        # ✅ Safe cleanup (no UnboundLocalError anymore)
         await cleanup_files(download_path, metadata_path, thumb_path)
         renaming_operations.pop(file_id, None)
